@@ -85,8 +85,9 @@ export default async (req) => {
       return json({ reply: 'TEMU lagi banyak yang ajak ngobrol nih. Tunggu sekitar satu menit, lalu coba lagi, ya. Kalau butuh bantuan segera, buka Pusat Bantuan.' }, 429);
     }
     if (!res.ok) {
-      console.error('Gemini error', res.status, await res.text());
-      return json({ reply: 'Maaf, TEMU sedang mengalami gangguan. Coba lagi nanti, ya.' }, 502);
+      const detail = await res.text();
+      console.error('Gemini error', res.status, detail);
+      return json({ reply: 'Maaf, TEMU sedang mengalami gangguan. (Kode ' + res.status + ': ' + detail.slice(0, 300) + ')' }, 502);
     }
     const data = await res.json();
     const reply = (data?.candidates?.[0]?.content?.parts || []).map((p) => p.text || '').join('').trim();
