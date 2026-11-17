@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skrining PCL-5 · HEALO with TEMU</title>
+<meta name="description" content="Skrining awal gejala PTSD dengan PCL-5. Bukan diagnosis.">
+<meta name="theme-color" content="#15484C">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="img/icon-192.png">
+<link rel="apple-touch-icon" href="img/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&family=Nunito+Sans:wght@400;700;800&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="site-header">
+<div class="wrap">
+<a class="brand" href="index.html"><img src="img/temu-sit.webp" alt="" width="44" height="44">HEALO <span>with TEMU</span></a>
+<nav class="nav" aria-label="Menu utama"><a href="index.html">Beranda</a><a href="edukasi.html">Edukasi PTSD</a><a href="skrining.html" aria-current="page">Skrining</a><a href="temu.html">Tanya TEMU</a><a href="bantuan.html">Pusat Bantuan</a></nav>
+</div>
+</header>
+<main>
+<section class="section">
+<div class="wrap" style="max-width:820px">
+<h1>Skrining PCL-5</h1>
+<p class="lead">PTSD Checklist for DSM-5: 20 pertanyaan tentang perasaanmu dalam <strong>satu bulan terakhir</strong>. Butuh sekitar 5–10 menit.</p>
+<ol class="steps" id="steps"><li class="active">1. Persetujuan</li><li>2. Kejadian</li><li>3. Pertanyaan</li><li>4. Hasil</li></ol>
+
+<div class="panel" id="p-consent">
+<div class="card">
+<h2>Sebelum mulai</h2>
+<ul>
+<li>Skrining ini <strong>bukan diagnosis</strong>. Hasilnya hanya sinyal awal untuk membantumu memutuskan perlu bicara dengan profesional atau tidak.</li>
+<li>HEALO ditujukan untuk pengguna berusia <strong>18 tahun ke atas</strong>, sesuai pedoman alat ukur PCL-5.</li>
+<li>Jawabanmu dihitung langsung di perangkat ini dan <strong>tidak dikirim atau disimpan</strong> di server.</li>
+<li>Beberapa pertanyaan mungkin membuatmu teringat hal yang berat. Kamu boleh berhenti kapan saja dan membuka <a href="bantuan.html">Pusat Bantuan</a>.</li>
+</ul>
+<label class="option"><input type="checkbox" id="consent"><span>Saya memahami penjelasan di atas, berusia 18 tahun ke atas, dan bersedia melanjutkan.</span></label>
+<div class="btn-row"><button class="btn btn-primary" id="to-event" disabled>Lanjut</button></div>
+</div>
+</div>
+
+<div class="panel" id="p-event" hidden>
+<div class="card">
+<h2>Kejadian yang paling mengganggumu</h2>
+<fieldset><legend>Pilih satu kejadian yang paling membuatmu tertekan:</legend><label class="option"><input type="radio" name="event" value="bencana" required><span>Bencana alam (gempa, banjir, kebakaran, dll.)</span></label><label class="option"><input type="radio" name="event" value="kecelakaan" required><span>Kecelakaan serius</span></label><label class="option"><input type="radio" name="event" value="kekerasan_fisik" required><span>Kekerasan fisik atau ancaman kekerasan</span></label><label class="option"><input type="radio" name="event" value="kekerasan_seksual" required><span>Kekerasan atau pelecehan seksual</span></label><label class="option"><input type="radio" name="event" value="sakit" required><span>Penyakit atau cedera yang mengancam nyawa</span></label><label class="option"><input type="radio" name="event" value="kehilangan" required><span>Kematian mendadak orang yang dicintai</span></label><label class="option"><input type="radio" name="event" value="lainnya" required><span>Kejadian sangat menekan lainnya</span></label><label class="option"><input type="radio" name="event" value="tidak_pernah" required><span>Saya tidak pernah mengalami kejadian seperti di atas</span></label><label class="option"><input type="radio" name="event" value="tidak_mau" required><span>Saya tidak ingin menyebutkan</span></label></fieldset>
+<p class="small" id="event-error" role="alert"></p>
+<div class="btn-row"><button class="btn btn-ghost" data-back="p-consent">Kembali</button><button class="btn btn-primary" id="to-items">Lanjut</button></div>
+</div>
+</div>
+
+<div class="panel" id="p-guidance" hidden>
+<div class="card lagoon">
+<img src="img/temu-sit.webp" alt="" width="160" height="160" style="float:right;max-width:140px">
+<h2>Terima kasih sudah jujur</h2>
+<p>Karena kamu belum pernah mengalami peristiwa traumatis, skrining PCL-5 tidak perlu diisi. PCL-5 khusus menanyakan dampak dari kejadian traumatis.</p>
+<p>Kalau kamu sedang merasa stres, cemas, atau sedih, itu tetap penting. Kamu bisa ngobrol dengan TEMU, membaca materi edukasi, atau bercerita ke guru BK.</p>
+<div class="btn-row" style="clear:both"><a class="btn btn-secondary" href="temu.html">Ngobrol dengan TEMU</a><a class="btn btn-ghost" href="edukasi.html">Baca edukasi</a></div>
+</div>
+</div>
+
+<div class="panel" id="p-items" hidden>
+<p><strong>Dalam satu bulan terakhir, seberapa terganggu kamu oleh hal berikut?</strong> Semua pertanyaan wajib dijawab.</p>
+<div class="progress" aria-hidden="true"><div id="bar"></div></div>
+<p class="small" id="count" aria-live="polite">0 dari 20 terjawab</p>
+<form id="pcl"></form>
+<p class="notice danger" id="items-error" role="alert" hidden></p>
+<div class="btn-row"><button class="btn btn-ghost" data-back="p-event">Kembali</button><button class="btn btn-primary" id="submit">Lihat hasil</button></div>
+</div>
+
+<div class="panel" id="p-result" hidden>
+<div id="result"></div>
+<div class="btn-row"><a class="btn btn-primary" href="bantuan.html">Buka Pusat Bantuan</a><a class="btn btn-secondary" href="temu.html">Ngobrol dengan TEMU</a><button class="btn btn-ghost" id="restart">Ulangi skrining</button></div>
+</div>
+</div>
+</section>
+</main>
+<footer class="site-footer">
+<div class="wrap">
+<p><strong>HEALO with TEMU</strong> · <em>Temukan Perasaanmu – Find Your Feelings</em></p>
+<p>HEALO adalah media edukasi dan skrining awal, <strong>bukan alat diagnosis</strong>. Diagnosis hanya dapat ditegakkan oleh psikolog atau psikiater. Dalam keadaan darurat, hubungi <a href="tel:112">112</a> atau buka <a href="bantuan.html">Pusat Bantuan</a>.</p>
+<p>Dikembangkan oleh tim SMA Negeri 3 Surakarta, 2026.</p>
+</div>
+</footer>
+<script src="assets/common.js"></script>
+<script src="assets/screening.js"></script>
+</body>
+</html>

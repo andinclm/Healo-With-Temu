@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tanya TEMU · HEALO with TEMU</title>
+<meta name="description" content="Ngobrol dengan TEMU, teman AI HEALO, tentang stres, trauma, dan kesehatan mental.">
+<meta name="theme-color" content="#15484C">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="img/icon-192.png">
+<link rel="apple-touch-icon" href="img/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&family=Nunito+Sans:wght@400;700;800&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="site-header">
+<div class="wrap">
+<a class="brand" href="index.html"><img src="img/temu-sit.webp" alt="" width="44" height="44">HEALO <span>with TEMU</span></a>
+<nav class="nav" aria-label="Menu utama"><a href="index.html">Beranda</a><a href="edukasi.html">Edukasi PTSD</a><a href="skrining.html">Skrining</a><a href="temu.html" aria-current="page">Tanya TEMU</a><a href="bantuan.html">Pusat Bantuan</a></nav>
+</div>
+</header>
+<main>
+<section class="section">
+<div class="wrap" style="max-width:860px">
+<div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+<img src="img/temu-stand.webp" alt="" width="110" height="110" style="width:110px">
+<div><h1 style="margin:0">Tanya TEMU</h1><p class="small" style="margin:0">Teman ngobrol AI tentang perasaan, stres, dan trauma.</p></div>
+</div>
+<p class="notice" style="margin-top:1rem"><strong>Sebelum ngobrol:</strong> TEMU adalah AI, bukan psikolog, dan tidak bisa mendiagnosis. Jangan tulis nama lengkap, alamat, atau data pribadi lain, karena pesanmu diproses oleh layanan AI (Google Gemini). Kalau kamu dalam bahaya, langsung hubungi <a href="tel:112">112</a> atau <a href="bantuan.html">Pusat Bantuan</a>.</p>
+<div class="suggestions" id="suggest" aria-label="Contoh pertanyaan">
+<button type="button">Apa bedanya stres dan trauma?</button>
+<button type="button">Aku sering mimpi buruk setelah kecelakaan, normal nggak?</button>
+<button type="button">Gimana cara cerita ke guru BK?</button>
+<button type="button">Apa itu PCL-5?</button>
+</div>
+<div class="chat">
+<div class="chat-log" id="log" aria-live="polite"></div>
+<form class="chat-form" id="chat-form">
+<label for="input" class="small" style="position:absolute;left:-9999px">Tulis pesan untuk TEMU</label>
+<textarea id="input" rows="1" maxlength="800" placeholder="Tulis pesanmu untuk TEMU..." required></textarea>
+<button class="btn btn-primary" id="send" type="submit">Kirim</button>
+</form>
+</div>
+</div>
+</section>
+</main>
+<footer class="site-footer">
+<div class="wrap">
+<p><strong>HEALO with TEMU</strong> · <em>Temukan Perasaanmu – Find Your Feelings</em></p>
+<p>HEALO adalah media edukasi dan skrining awal, <strong>bukan alat diagnosis</strong>. Diagnosis hanya dapat ditegakkan oleh psikolog atau psikiater. Dalam keadaan darurat, hubungi <a href="tel:112">112</a> atau buka <a href="bantuan.html">Pusat Bantuan</a>.</p>
+<p>Dikembangkan oleh tim SMA Negeri 3 Surakarta, 2026.</p>
+</div>
+</footer>
+<script src="assets/common.js"></script>
+<script src="assets/chat.js"></script>
+</body>
+</html>
