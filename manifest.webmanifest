@@ -1,7 +1,7 @@
 {
   "name": "HEALO with TEMU",
   "short_name": "HEALO",
-  "description": "Edukasi PTSD, skrining awal PCL-5, teman ngobrol AI, dan pusat bantuan untuk siswa.",
+  "description": "Edukasi PTSD, skrining awal PCL-5, teman bercerita berbasis AI, dan pusat bantuan bagi siswa.",
   "lang": "id",
   "start_url": "index.html",
   "scope": "./",

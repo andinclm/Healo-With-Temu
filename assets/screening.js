@@ -5,7 +5,8 @@
 //  - "Needs follow-up" when total >= 31 (Bovin et al., 2016) OR the DSM-5 pattern is met:
 //    items rated >= 2 count as symptoms; >=1 in B (1-5), >=1 in C (6-7), >=2 in D (8-14), >=2 in E (15-20).
 //  - Item 16 rated >= 3 -> crisis help box.
-// Everything is computed in the browser; nothing is sent or stored.
+// The score is computed in the browser. Students of SMAN 1 / SMAN 3 Surakarta who agree have their
+// result sent (via /api/submit) only to their own school's guru BK sheet. "Umum" sends nothing.
 // NOTE: the Indonesian wording below is a working translation; have it reviewed by the psychologists.
 
 (function () {
@@ -68,8 +69,11 @@
 
   // ---- UI ----
   const $ = (id) => document.getElementById(id);
-  const panels = ['p-consent', 'p-event', 'p-items', 'p-result', 'p-guidance'];
-  const stepIndex = { 'p-consent': 0, 'p-event': 1, 'p-guidance': 1, 'p-items': 2, 'p-result': 3 };
+  const panels = ['p-consent', 'p-school', 'p-event', 'p-items', 'p-result', 'p-guidance'];
+  const stepIndex = { 'p-consent': 0, 'p-school': 1, 'p-event': 2, 'p-guidance': 2, 'p-items': 3, 'p-result': 4 };
+  const SCHOOLS = { sman1: 'SMA Negeri 1 Surakarta', sman3: 'SMA Negeri 3 Surakarta' };
+  let student = null;   // { school, nama, kelas } when the result goes to a school
+  let sent = false;
   function show(id) {
     panels.forEach((p) => { $(p).hidden = p !== id; });
     const idx = stepIndex[id];
@@ -121,14 +125,65 @@
   });
 
   $('consent').addEventListener('change', (e) => { $('to-event').disabled = !e.target.checked; });
-  $('to-event').addEventListener('click', () => show('p-event'));
+  $('to-event').addEventListener('click', () => show('p-school'));
+
+  // ---- school step ----
+  document.querySelectorAll('input[name="school"]').forEach((r) => r.addEventListener('change', () => {
+    const v = r.value;
+    $('student-fields').hidden = !SCHOOLS[v];
+    if (SCHOOLS[v]) $('school-name').textContent = SCHOOLS[v];
+    $('school-error').textContent = '';
+  }));
+  $('to-event2').addEventListener('click', () => {
+    const sc = document.querySelector('input[name="school"]:checked');
+    const err = (m) => { $('school-error').textContent = m; };
+    if (!sc) return err('Silakan pilih asal sekolahmu terlebih dahulu.');
+    if (SCHOOLS[sc.value]) {
+      const nama = $('nama').value.trim(), kelas = $('kelas').value.trim();
+      if (nama.length < 2) { $('nama').focus(); return err('Isi nama lengkapmu agar guru BK dapat menindaklanjuti.'); }
+      if (!kelas) { $('kelas').focus(); return err('Isi kelasmu, misalnya XI-3.'); }
+      if (!$('share-ok').checked) return err('Centang persetujuan pengiriman hasil ke guru BK, atau pilih "Umum / sekolah lain" jika tidak ingin hasilmu dikirim.');
+      student = { school: sc.value, nama, kelas };
+    } else {
+      student = null;
+    }
+    err('');
+    show('p-event');
+  });
+
+  // ---- send result to the school's guru BK ----
+  async function sendResult(payload, statusEl) {
+    if (!student || sent) return;
+    const name = SCHOOLS[student.school];
+    statusEl.className = 'send-status';
+    statusEl.textContent = 'Mengirim hasil ke guru BK ' + name + '...';
+    try {
+      const res = await fetch('/api/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(Object.assign({}, student, payload))
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) throw new Error(data.error || res.status);
+      sent = true;
+      statusEl.textContent = '✓ Hasil sudah terkirim ke guru BK ' + name + '. Data ini dijaga kerahasiaannya.';
+    } catch (e) {
+      statusEl.className = 'send-status err';
+      statusEl.innerHTML = 'Hasil belum terkirim ke guru BK (koneksi atau server bermasalah). <button type="button" class="btn btn-ghost" style="min-height:40px;padding:.3rem 1rem;margin-left:.4rem">Coba kirim lagi</button><br><span class="small">Kamu juga bisa mencetak/menyimpan hasil ini dan menunjukkannya langsung ke guru BK.</span>';
+      statusEl.querySelector('button').addEventListener('click', () => sendResult(payload, statusEl));
+    }
+  }
   document.querySelectorAll('[data-back]').forEach((b) => b.addEventListener('click', () => show(b.dataset.back)));
 
   $('to-items').addEventListener('click', () => {
     const ev = document.querySelector('input[name="event"]:checked');
-    if (!ev) { $('event-error').textContent = 'Pilih salah satu jawaban dulu, ya.'; return; }
+    if (!ev) { $('event-error').textContent = 'Silakan pilih salah satu jawaban terlebih dahulu.'; return; }
     $('event-error').textContent = '';
-    if (ev.value === 'tidak_pernah') show('p-guidance'); else show('p-items');
+    if (ev.value === 'tidak_pernah') {
+      show('p-guidance');
+      $('guidance-status').textContent = '';
+      sendResult({ event: ev.value, answers: null }, $('guidance-status'));
+    } else show('p-items');
   });
 
   $('submit').addEventListener('click', () => {
@@ -144,15 +199,21 @@
     $('items-error').hidden = true;
     renderResult(score(a));
     show('p-result');
+    const ev = document.querySelector('input[name="event"]:checked');
+    sendResult({ event: ev ? ev.value : '', answers: a }, $('send-status'));
   });
 
   $('restart').addEventListener('click', () => {
     form.reset(); $('consent').checked = false; $('to-event').disabled = true;
     document.querySelectorAll('input[name="event"]').forEach((r) => { r.checked = false; });
     $('bar').style.width = '0'; $('count').textContent = '0 dari 20 terjawab';
+    document.querySelectorAll('input[name="school"]').forEach((r) => { r.checked = false; });
+    $('nama').value = ''; $('kelas').value = ''; $('share-ok').checked = false;
+    $('student-fields').hidden = true; student = null; sent = false;
     show('p-consent');
   });
 
+  function esc(t) { return String(t).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
   function renderResult(r) {
     const crisis = r.crisis ? `
       <div class="crisis-box" role="alert">
@@ -167,19 +228,21 @@
           ? `Skor totalmu ${r.total} berada di atas ambang batas ${CUTOFF}.`
           : `Skor totalmu ${r.total}, tetapi pola jawabanmu cocok dengan pola gejala DSM-5.`)
         + ' Ini artinya ada gejala yang sebaiknya kamu bicarakan dengan guru BK, psikolog, atau psikiater.'
-      : `Skor totalmu ${r.total}, di bawah ambang batas ${CUTOFF}, dan pola gejala DSM-5 tidak terpenuhi. Kalau kamu tetap merasa terganggu, bercerita kepada orang yang dipercaya atau guru BK tetap sangat dianjurkan.`;
+      : `Skor totalmu ${r.total}, di bawah ambang batas ${CUTOFF}, dan pola gejala DSM-5 tidak terpenuhi. Jika kamu tetap merasa terganggu, bercerita kepada orang yang dipercaya atau guru BK tetap sangat dianjurkan.`;
     const bars = r.clusters.map((c) => `
       <div class="row"><span>${c.key} · ${c.name}</span><div class="track"><div class="fill" style="width:${(c.sum / c.max * 100).toFixed(0)}%"></div></div><span>${c.sum}/${c.max}</span></div>`).join('');
     $('result').innerHTML = `
       ${crisis}
       <div class="card ${color}">
         <span class="pill">${label}</span>
+        ${student ? `<p class="small" style="margin:.8rem 0 0">${SCHOOLS[student.school]} · ${esc(student.nama)} · Kelas ${esc(student.kelas)}</p>` : ''}
         <p style="margin-top:1rem" class="small">Skor total PCL-5</p>
         <p class="result-score">${r.total}<span style="font-size:1.2rem"> / 80</span></p>
         <p>${why}</p>
         <div class="cluster-bars">${bars}</div>
         <p class="notice"><strong>Ini bukan diagnosis.</strong> PCL-5 adalah alat skrining. Hanya psikolog atau psikiater yang dapat menegakkan diagnosis PTSD melalui pemeriksaan langsung.</p>
         <button class="btn btn-ghost" type="button" onclick="window.print()">Cetak / simpan hasil</button>
+        <div id="send-status" aria-live="polite"></div>
       </div>`;
   }
 })();

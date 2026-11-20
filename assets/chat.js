@@ -8,12 +8,12 @@
   const history = []; // {role: 'user' | 'model', text}
 
   const CRISIS_REPLY =
-    'Terima kasih sudah mau cerita. Kedengarannya kamu sedang sangat berat sekarang, dan keselamatanmu yang paling penting.\n\n' +
+    'Terima kasih sudah mau bercerita. Tampaknya kamu sedang menghadapi masa yang sangat berat, dan keselamatanmu yang paling penting.\n\n' +
     'Tolong hubungi bantuan sekarang juga:\n' +
     '• Darurat: 112\n' +
     '• Healing119 Kemenkes: 119 ekstensi 8 (healing119.id)\n' +
-    '• Atau temui guru BK, orang tua, atau orang dewasa yang kamu percaya, dan jangan sendirian dulu.\n\n' +
-    'Kamu tidak harus menghadapinya sendirian. Aku tetap di sini kalau kamu mau lanjut ngobrol.';
+    '• Atau temui guru BK, orang tua, atau orang dewasa yang kamu percaya, dan usahakan tidak sendirian untuk sementara.\n\n' +
+    'Kamu tidak harus menghadapinya sendirian. Aku tetap di sini jika kamu ingin melanjutkan percakapan.';
 
   function add(role, text, extra) {
     const div = document.createElement('div');
@@ -24,7 +24,7 @@
     return div;
   }
 
-  add('model', 'Hai, aku TEMU! 🦔\nAku bisa menemanimu ngobrol soal perasaan, stres, trauma, atau cara mencari bantuan. Aku bukan psikolog dan tidak bisa mendiagnosis, tapi aku siap mendengarkan. Mau cerita apa hari ini?');
+  add('model', 'Halo, aku TEMU! 🦔\nAku dapat menemanimu berbincang tentang perasaan, stres, trauma, atau cara mencari bantuan. Aku bukan psikolog dan tidak dapat mendiagnosis, tetapi aku siap mendengarkan. Apa yang ingin kamu ceritakan hari ini?');
 
   async function ask(text) {
     add('user', text);
@@ -46,7 +46,7 @@
       });
       const data = await res.json().catch(() => ({}));
       typing.remove();
-      const reply = data.reply || 'Maaf, TEMU belum bisa menjawab sekarang. Coba lagi sebentar lagi, ya.';
+      const reply = data.reply || 'Maaf, TEMU belum dapat menjawab saat ini. Silakan coba beberapa saat lagi.';
       add('model', reply, data.crisis ? 'crisis' : '');
       history.push({ role: 'model', text: reply });
     } catch (e) {
