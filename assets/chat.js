@@ -26,18 +26,27 @@
 
   add('model', 'Halo, aku TEMU! 🦔\nAku dapat menemanimu berbincang tentang perasaan, stres, trauma, atau cara mencari bantuan. Aku bukan psikolog dan tidak dapat mendiagnosis, tetapi aku siap mendengarkan. Apa yang ingin kamu ceritakan hari ini?');
 
+  const avatar = document.getElementById('temu-avatar');
+  const mood = (state, label) => window.temuSet && window.temuSet(avatar, state, label);
+  let idleTimer = 0;
+  const backToIdle = (ms) => { clearTimeout(idleTimer); idleTimer = setTimeout(() => mood('idle', 'TEMU siap mendengarkan.'), ms); };
+  backToIdle(2600);
+
   async function ask(text) {
+    clearTimeout(idleTimer);
     add('user', text);
     history.push({ role: 'user', text });
 
     if (window.healoIsCrisis(text)) {
       add('model', CRISIS_REPLY, 'crisis');
       history.push({ role: 'model', text: CRISIS_REPLY });
+      mood('calm', 'Keselamatanmu yang utama. TEMU tetap di sini.');
       return;
     }
 
     send.disabled = true;
-    const typing = add('model', 'TEMU sedang mengetik...', 'typing');
+    const typing = add('model', 'TEMU sedang berpikir...', 'typing');
+    mood('thinking', 'TEMU sedang berpikir...');
     try {
       const res = await fetch('/api/temu', {
         method: 'POST',
@@ -49,9 +58,14 @@
       const reply = data.reply || 'Maaf, TEMU belum dapat menjawab saat ini. Silakan coba beberapa saat lagi.';
       add('model', reply, data.crisis ? 'crisis' : '');
       history.push({ role: 'model', text: reply });
+      if (data.crisis) mood('calm', 'Keselamatanmu yang utama. TEMU tetap di sini.');
+      else if (res.ok) { mood('happy', 'TEMU sudah menjawab!'); backToIdle(2400); }
+      else { mood('calm', 'Maaf, TEMU sedang mengalami gangguan.'); backToIdle(4000); }
     } catch (e) {
       typing.remove();
-      add('model', 'Maaf, TEMU tidak bisa terhubung. Fitur AI hanya aktif setelah HEALO dipasang di Netlify (lihat README). Sambil menunggu, kamu bisa membaca materi Edukasi atau membuka Pusat Bantuan.');
+      mood('calm', 'TEMU belum dapat terhubung.');
+      backToIdle(4000);
+      add('model', 'Maaf, TEMU tidak dapat terhubung. Fitur AI hanya aktif setelah HEALO dipasang di Netlify (lihat README). Sambil menunggu, kamu bisa membaca materi Edukasi atau membuka Pusat Bantuan.');
     } finally {
       send.disabled = false;
       input.focus();

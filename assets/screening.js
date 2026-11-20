@@ -169,7 +169,7 @@
       statusEl.textContent = '✓ Hasil sudah terkirim ke guru BK ' + name + '. Data ini dijaga kerahasiaannya.';
     } catch (e) {
       statusEl.className = 'send-status err';
-      statusEl.innerHTML = 'Hasil belum terkirim ke guru BK (koneksi atau server bermasalah). <button type="button" class="btn btn-ghost" style="min-height:40px;padding:.3rem 1rem;margin-left:.4rem">Coba kirim lagi</button><br><span class="small">Kamu juga bisa mencetak/menyimpan hasil ini dan menunjukkannya langsung ke guru BK.</span>';
+      statusEl.innerHTML = 'Hasil belum terkirim ke guru BK (koneksi atau server bermasalah). <span class="small">[' + String(e.message).replace(/[<>&]/g, '') + ']</span> <button type="button" class="btn btn-ghost" style="min-height:40px;padding:.3rem 1rem;margin-left:.4rem">Coba kirim lagi</button><br><span class="small">Kamu juga bisa mencetak/menyimpan hasil ini dan menunjukkannya langsung ke guru BK.</span>';
       statusEl.querySelector('button').addEventListener('click', () => sendResult(payload, statusEl));
     }
   }
@@ -234,6 +234,12 @@
     $('result').innerHTML = `
       ${crisis}
       <div class="card ${color}">
+        <div class="temu-cheer">
+          <div class="temu-3d" data-state="${r.followUp ? 'calm' : 'happy'}" role="img" aria-label="TEMU"><div class="temu-tilt"><span class="temu-glow"></span><div class="temu-float"><img src="img/${r.followUp ? 'temu-sit' : 'temu-jump'}.webp" alt="" width="400" height="400"></div></div></div>
+          <p>${r.followUp
+            ? 'Terima kasih sudah jujur pada dirimu sendiri. Kamu tidak sendirian. Mari ambil langkah berikutnya bersama guru BK.'
+            : 'Terima kasih sudah meluangkan waktu untuk mengenali perasaanmu hari ini.'}</p>
+        </div>
         <span class="pill">${label}</span>
         ${student ? `<p class="small" style="margin:.8rem 0 0">${SCHOOLS[student.school]} · ${esc(student.nama)} · Kelas ${esc(student.kelas)}</p>` : ''}
         <p style="margin-top:1rem" class="small">Skor total PCL-5</p>

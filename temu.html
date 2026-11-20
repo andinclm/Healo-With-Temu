@@ -23,11 +23,8 @@
 </header>
 <main>
 <section class="section">
-<div class="wrap" style="max-width:860px">
-<div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
-<img src="img/temu-stand.webp" alt="" width="110" height="110" style="width:110px">
-<div><h1 style="margin:0">Tanya TEMU</h1><p class="small" style="margin:0">Teman bercerita berbasis AI tentang perasaan, stres, dan trauma.</p></div>
-</div>
+<div class="wrap" style="max-width:1100px">
+<h1 style="margin:0">Tanya TEMU</h1><p class="small" style="margin:0">Teman bercerita berbasis AI tentang perasaan, stres, dan trauma.</p>
 <p class="notice" style="margin-top:1rem"><strong>Sebelum memulai:</strong> TEMU adalah AI, bukan psikolog, dan tidak bisa mendiagnosis. Jangan menuliskan nama lengkap, alamat, atau data pribadi lain, karena pesanmu diproses oleh layanan AI (Google Gemini). Jika kamu dalam bahaya, segera hubungi <a href="tel:112">112</a> atau <a href="bantuan.html">Pusat Bantuan</a>.</p>
 <div class="suggestions" id="suggest" aria-label="Contoh pertanyaan">
 <button type="button">Apa perbedaan stres dan trauma?</button>
@@ -35,6 +32,8 @@
 <button type="button">Bagaimana cara bercerita kepada guru BK?</button>
 <button type="button">Apa itu PCL-5?</button>
 </div>
+<div class="chat-wrap">
+<aside class="temu-stage"><div class="temu-3d " id="temu-avatar" data-state="greet" role="img" aria-label="TEMU"><div class="temu-tilt"><span class="temu-glow"></span><div class="temu-float"><img src="img/temu-wink.webp" alt="" width="400" height="400"></div><span class="temu-bubble" aria-hidden="true"><i></i><i></i><i></i></span></div></div><p class="temu-status" data-temu-status="temu-avatar" aria-live="polite">Halo! Senang bertemu denganmu.</p></aside>
 <div class="chat">
 <div class="chat-log" id="log" aria-live="polite"></div>
 <form class="chat-form" id="chat-form">
@@ -42,6 +41,7 @@
 <textarea id="input" rows="1" maxlength="800" placeholder="Tulis pesanmu untuk TEMU..." required></textarea>
 <button class="btn btn-primary" id="send" type="submit">Kirim</button>
 </form>
+</div>
 </div>
 </div>
 </section>
@@ -55,6 +55,7 @@
 </div>
 </footer>
 <script src="assets/common.js"></script>
+<script src="assets/temu.js"></script>
 <script src="assets/chat.js"></script>
 </body>
 </html>

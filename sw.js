@@ -1,8 +1,8 @@
 // Service worker: keeps HEALO's pages available offline. The AI chat (/api/) always goes to the network.
-const CACHE = 'healo-v4';
+const CACHE = 'healo-v6';
 const FILES = [
   './', 'index.html', 'edukasi.html', 'skrining.html', 'temu.html', 'bantuan.html',
-  'assets/style.css', 'assets/common.js', 'assets/screening.js', 'assets/chat.js',
+  'assets/style.css', 'assets/common.js', 'assets/screening.js', 'assets/chat.js', 'assets/temu.js',
   'img/temu-wink.webp', 'img/temu-jump.webp', 'img/temu-sit.webp', 'img/temu-stand.webp', 'img/temu-walk.webp',
   'img/logo-sman1.png', 'img/logo-sman3.png', 'img/logo-dinkes.png', 'img/logo-puskesmas.png',
   'img/icon-192.png', 'img/icon-512.png', 'manifest.webmanifest'
